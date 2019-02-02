@@ -1,8 +1,10 @@
 package ch.w3tec.qt.api.domain.service;
 
+import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
 import ch.w3tec.qt.api.domain.exception.IllegalTournamentUpdateException;
 import ch.w3tec.qt.api.domain.exception.ResourceNotFoundException;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
+import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import ch.w3tec.qt.api.persistence.repository.TournamentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,14 @@ public class TournamentService {
     public Tournament findById(UUID id) {
         return tournamentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Tournament", "id", id.toString()));
+    }
+
+    public Tournament create(CreateTournamentRequest createTournamentRequest) {
+        Tournament tournament = Tournament.builder()
+                .name(createTournamentRequest.getName())
+                .state(TournamentState.OPEN)
+                .build();
+        return tournamentRepository.save(tournament);
     }
 
 }

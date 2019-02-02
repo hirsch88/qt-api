@@ -1,6 +1,7 @@
 package ch.w3tec.qt.api.application.controller;
 
 import ch.w3tec.qt.api.domain.service.TournamentService;
+import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,12 @@ public class TournamentController {
     public ResponseEntity<List<Tournament>> findAll() {
         List<Tournament> tournaments = tournamentService.findAll();
         return ResponseEntity.ok().body(tournaments);
+    }
+
+    @PostMapping()
+    public ResponseEntity<Tournament> create(@RequestBody CreateTournamentRequest createTournamentRequest) {
+        Tournament tournament = tournamentService.create(createTournamentRequest);
+        return ResponseEntity.ok().body(tournament);
     }
 
     @GetMapping("/{id}")
