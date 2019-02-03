@@ -8,6 +8,7 @@ import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import ch.w3tec.qt.api.persistence.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +31,8 @@ public class TournamentService {
         this.tournamentRepository = tournamentRepository;
     }
 
-    public Page<Tournament> findAll(Pageable pageRequest) {
-        return tournamentRepository.findAll(pageRequest);
+    public Page<Tournament> findAll(Specification<Tournament> spec, Pageable pageRequest) {
+        return tournamentRepository.findAll(spec, pageRequest);
     }
 
     public Tournament findById(UUID id) {

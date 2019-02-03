@@ -3,6 +3,7 @@ package ch.w3tec.qt.api.application.controller;
 import ch.w3tec.qt.api.application.request.CreateTeamRequest;
 import ch.w3tec.qt.api.application.request.UpdateTournamentRequest;
 import ch.w3tec.qt.api.application.response.PageResponse;
+import ch.w3tec.qt.api.domain.exception.IllegalSearchFilterException;
 import ch.w3tec.qt.api.domain.service.GameService;
 import ch.w3tec.qt.api.domain.service.TeamService;
 import ch.w3tec.qt.api.domain.service.TournamentService;
@@ -10,13 +11,18 @@ import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
 import ch.w3tec.qt.api.persistence.entity.Game;
 import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
+import ch.w3tec.qt.api.persistence.repository.rsql.CustomRsqlVisitor;
+import cz.jirutka.rsql.parser.RSQLParser;
+import cz.jirutka.rsql.parser.RSQLParserException;
+import cz.jirutka.rsql.parser.ast.Node;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -39,8 +45,19 @@ public class TournamentController {
     }
 
     @GetMapping()
-    public ResponseEntity<PageResponse<Tournament>> findAll(Pageable pageRequest) {
-        Page<Tournament> page = tournamentService.findAll(pageRequest);
+    public ResponseEntity<PageResponse<Tournament>> findAll(@RequestParam(value = "search", required = false) String search, Pageable pageRequest) {
+        Specification<Tournament> spec = Specification.where(null);
+
+        if (Strings.isNotEmpty(search)) {
+            try {
+            Node rootNode = new RSQLParser().parse(search);
+            spec = rootNode.accept(new CustomRsqlVisitor<>());
+            } catch (RSQLParserException e){
+                throw new IllegalSearchFilterException();
+            }
+        }
+
+        Page<Tournament> page = tournamentService.findAll(spec, pageRequest);
         PageResponse<Tournament> pageResponse = PageResponse.build(page);
         return ResponseEntity.ok().body(pageResponse);
     }
