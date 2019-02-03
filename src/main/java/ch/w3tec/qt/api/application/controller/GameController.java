@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -27,7 +28,7 @@ public class GameController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Game> update(@PathVariable("id") UUID id, @RequestBody UpdateGameRequest updateGameRequest) {
+    public ResponseEntity<Game> update(@PathVariable("id") UUID id, @Valid @RequestBody UpdateGameRequest updateGameRequest) {
         Game game = gameService.update(id, updateGameRequest);
         return ResponseEntity.ok().body(game);
     }

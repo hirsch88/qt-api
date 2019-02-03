@@ -3,16 +3,18 @@ package ch.w3tec.qt.api.application.request;
 import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Builder(toBuilder = true)
 public class UpdateTournamentRequest {
 
     private String name;
 
-    @NonNull
+    @NotNull
     private TournamentState state;
 
 }

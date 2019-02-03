@@ -1,13 +1,11 @@
 package ch.w3tec.qt.api.application.controller;
 
 import ch.w3tec.qt.api.application.request.CreateTeamRequest;
+import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
 import ch.w3tec.qt.api.application.request.UpdateTournamentRequest;
 import ch.w3tec.qt.api.application.response.PageResponse;
 import ch.w3tec.qt.api.domain.exception.IllegalSearchFilterException;
-import ch.w3tec.qt.api.domain.service.GameService;
-import ch.w3tec.qt.api.domain.service.TeamService;
 import ch.w3tec.qt.api.domain.service.TournamentService;
-import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
 import ch.w3tec.qt.api.persistence.entity.Game;
 import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
@@ -23,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -57,7 +56,7 @@ public class TournamentController {
     }
 
     @PostMapping()
-    public ResponseEntity<Tournament> create(@RequestBody CreateTournamentRequest createTournamentRequest) {
+    public ResponseEntity<Tournament> create(@RequestBody @Valid CreateTournamentRequest createTournamentRequest) {
         Tournament tournament = tournamentService.create(createTournamentRequest);
         return ResponseEntity.ok().body(tournament);
     }
@@ -69,7 +68,7 @@ public class TournamentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tournament> update(@PathVariable("id") UUID id, @RequestBody UpdateTournamentRequest updateTournamentRequest) {
+    public ResponseEntity<Tournament> update(@PathVariable("id") UUID id, @Valid @RequestBody UpdateTournamentRequest updateTournamentRequest) {
         Tournament tournament = tournamentService.update(id, updateTournamentRequest);
         return ResponseEntity.ok().body(tournament);
     }
@@ -95,7 +94,7 @@ public class TournamentController {
     }
 
     @PostMapping("/{id}/teams")
-    public ResponseEntity<Team> addTeamToTournament(@PathVariable("id") UUID id, @RequestBody CreateTeamRequest createTeamRequest) {
+    public ResponseEntity<Team> addTeamToTournament(@PathVariable("id") UUID id, @Valid @RequestBody CreateTeamRequest createTeamRequest) {
         Team team = tournamentService.addTeamToTournament(id, createTeamRequest);
         return ResponseEntity.ok().body(team);
     }

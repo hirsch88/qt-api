@@ -6,8 +6,8 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Builder(toBuilder = true)
 public class UpdateTeamRequest {
 

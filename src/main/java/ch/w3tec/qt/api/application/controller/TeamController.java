@@ -2,12 +2,12 @@ package ch.w3tec.qt.api.application.controller;
 
 import ch.w3tec.qt.api.application.request.UpdateTeamRequest;
 import ch.w3tec.qt.api.domain.service.TeamService;
-import ch.w3tec.qt.api.domain.service.TournamentService;
 import ch.w3tec.qt.api.persistence.entity.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -30,7 +30,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Team> update(@PathVariable("id") UUID id, @RequestBody UpdateTeamRequest updateTeamRequest) {
+    public ResponseEntity<Team> update(@PathVariable("id") UUID id, @Valid @RequestBody UpdateTeamRequest updateTeamRequest) {
         Team team = teamService.update(id, updateTeamRequest);
         return ResponseEntity.ok().body(team);
     }
