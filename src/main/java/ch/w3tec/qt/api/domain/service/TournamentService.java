@@ -1,8 +1,13 @@
 package ch.w3tec.qt.api.domain.service;
 
+import ch.w3tec.qt.api.application.request.CreateTeamRequest;
 import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
+import ch.w3tec.qt.api.application.request.UpdateTournamentRequest;
+import ch.w3tec.qt.api.domain.exception.IllegalTeamCreationException;
 import ch.w3tec.qt.api.domain.exception.IllegalTournamentUpdateException;
 import ch.w3tec.qt.api.domain.exception.ResourceNotFoundException;
+import ch.w3tec.qt.api.persistence.entity.Game;
+import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import ch.w3tec.qt.api.persistence.repository.TournamentRepository;
@@ -47,4 +52,16 @@ public class TournamentService {
         return tournamentRepository.save(tournament);
     }
 
+    public void deleteById(UUID id) {
+        Tournament tournament = findById(id);
+        tournamentRepository.delete(tournament);
+    }
+
+    public Tournament update(UUID id, UpdateTournamentRequest updateTournamentRequest) {
+        Tournament tournament = findById(id);
+
+        // TODO: Add update logic
+
+        return tournament;
+    }
 }

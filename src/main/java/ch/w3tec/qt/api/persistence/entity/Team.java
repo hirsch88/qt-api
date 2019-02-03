@@ -1,23 +1,23 @@
 package ch.w3tec.qt.api.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tournaments")
+@Table(name = "teams")
 @Getter
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class Tournament extends Auditable {
+public class Team extends Auditable {
 
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -30,26 +30,27 @@ public class Tournament extends Auditable {
     @Column(nullable = false)
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TournamentState state;
+    @ManyToOne()
+    @ToString.Exclude
+    @JsonIgnore
+    private Tournament tournament;
 
     @OneToMany(
-            mappedBy = "tournament",
+            mappedBy = "host",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     @ToString.Exclude
-    @Getter(AccessLevel.PROTECTED)
-    private Set<Team> teams;
+    @JsonIgnore
+    private Set<Game> hostGames;
 
     @OneToMany(
-            mappedBy = "tournament",
+            mappedBy = "guest",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
     @ToString.Exclude
-    @Getter(AccessLevel.PROTECTED)
-    private Set<Game> games;
+    @JsonIgnore
+    private Set<Game> guestGames;
 
 }
