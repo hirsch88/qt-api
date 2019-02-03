@@ -26,15 +26,12 @@ public class TeamService {
 //    private static final Logger LOG = LoggerFactory.getLogger(TournamentService.class);
 
     private final TeamRepository teamRepository;
-    private final TournamentService tournamentService;
 
     @Autowired
     public TeamService(
-            TeamRepository teamRepository,
-            TournamentService tournamentService
+            TeamRepository teamRepository
     ) {
         this.teamRepository = teamRepository;
-        this.tournamentService = tournamentService;
     }
 
     public Team findById(UUID id) {
@@ -42,27 +39,11 @@ public class TeamService {
                 .orElseThrow(() -> new ResourceNotFoundException("Team", "id", id.toString()));
     }
 
-    public void deleteById(UUID id) {
-        Team team = findById(id);
-        Tournament tournament = tournamentService.findById(id);
-        if (!tournament.getState().equals(TournamentState.OPEN)) {
-            throw new IllegalTeamDeletionException();
-        }
-
-        teamRepository.delete(team);
-    }
-
-    public Page<Team> findTeamsByTournamentId(UUID id, Pageable pageRequest) {
-        Tournament tournament = tournamentService.findById(id);
+    protected Page<Team> findByTournament(Tournament tournament, Pageable pageRequest) {
         return teamRepository.findByTournament(tournament, pageRequest);
     }
 
-    public Team addTeamToTournament(UUID id, CreateTeamRequest createTeamRequest) {
-        Tournament tournament = tournamentService.findById(id);
-        if (!tournament.getState().equals(TournamentState.OPEN)) {
-            throw new IllegalTeamCreationException();
-        }
-
+    protected Team addTeamToTournament(Tournament tournament, CreateTeamRequest createTeamRequest) {
         if (teamRepository.countByName(createTeamRequest.getName()) > 0) {
             throw new IllegalTeamNameException();
         }
@@ -72,6 +53,11 @@ public class TeamService {
                 .tournament(tournament)
                 .build();
         return teamRepository.save(team);
+    }
+
+    public void removeTeamFromTournament(UUID id) {
+        Team team = findById(id);
+        teamRepository.delete(team);
     }
 
     public Team update(UUID id, UpdateTeamRequest updateTeamRequest) {

@@ -27,15 +27,12 @@ public class GameService {
 //    private static final Logger LOG = LoggerFactory.getLogger(TournamentService.class);
 
     private final GameRepository gameRepository;
-    private final TournamentService tournamentService;
 
     @Autowired
     public GameService(
-            GameRepository gameRepository,
-            TournamentService tournamentService
+            GameRepository gameRepository
     ) {
         this.gameRepository = gameRepository;
-        this.tournamentService = tournamentService;
     }
 
     public Game findById(UUID id) {
@@ -43,8 +40,7 @@ public class GameService {
                 .orElseThrow(() -> new ResourceNotFoundException("Game", "id", id.toString()));
     }
 
-    public Page<Game> findGamesByTournamentId(UUID id, Pageable pageRequest) {
-        Tournament tournament = tournamentService.findById(id);
+    protected Page<Game> findByTournament(Tournament tournament, Pageable pageRequest) {
         return gameRepository.findByTournament(tournament, pageRequest);
     }
 

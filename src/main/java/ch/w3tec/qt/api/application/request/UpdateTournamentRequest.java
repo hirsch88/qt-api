@@ -11,6 +11,8 @@ import lombok.*;
 public class UpdateTournamentRequest {
 
     private String name;
-    private TournamentState tournamentState;
+
+    @NonNull
+    private TournamentState state;
 
 }

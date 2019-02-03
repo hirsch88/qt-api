@@ -30,18 +30,12 @@ import java.util.UUID;
 public class TournamentController {
 
     private final TournamentService tournamentService;
-    private final GameService gameService;
-    private final TeamService teamService;
 
     @Autowired
     public TournamentController(
-            TournamentService tournamentService,
-            GameService gameService,
-            TeamService teamService
+            TournamentService tournamentService
     ) {
         this.tournamentService = tournamentService;
-        this.gameService = gameService;
-        this.teamService = teamService;
     }
 
     @GetMapping()
@@ -88,22 +82,28 @@ public class TournamentController {
 
     @GetMapping("/{id}/games")
     public ResponseEntity<PageResponse<Game>> findGamesByTournamentId(@PathVariable("id") UUID id, Pageable pageRequest) {
-        Page<Game> page = gameService.findGamesByTournamentId(id, pageRequest);
+        Page<Game> page = tournamentService.findGamesByTournamentId(id, pageRequest);
         PageResponse<Game> pageResponse = PageResponse.build(page);
         return ResponseEntity.ok().body(pageResponse);
     }
 
     @GetMapping("/{id}/teams")
     public ResponseEntity<PageResponse<Team>> findTeamsByTournamentId(@PathVariable("id") UUID id, Pageable pageRequest) {
-        Page<Team> page = teamService.findTeamsByTournamentId(id, pageRequest);
+        Page<Team> page = tournamentService.findTeamsByTournamentId(id, pageRequest);
         PageResponse<Team> pageResponse = PageResponse.build(page);
         return ResponseEntity.ok().body(pageResponse);
     }
 
     @PostMapping("/{id}/teams")
-    public ResponseEntity<Team> createTeamForTournament(@PathVariable("id") UUID id, @RequestBody CreateTeamRequest createTeamRequest) {
-        Team team = teamService.addTeamToTournament(id, createTeamRequest);
+    public ResponseEntity<Team> addTeamToTournament(@PathVariable("id") UUID id, @RequestBody CreateTeamRequest createTeamRequest) {
+        Team team = tournamentService.addTeamToTournament(id, createTeamRequest);
         return ResponseEntity.ok().body(team);
+    }
+
+    @DeleteMapping("/{id}/teams/{teamId}")
+    public ResponseEntity removeTeamFromTournament(@PathVariable("id") UUID id, @PathVariable("teamId") UUID teamId) {
+        tournamentService.removeTeamFromTournament(id, teamId);
+        return ResponseEntity.noContent().build();
     }
 
 }

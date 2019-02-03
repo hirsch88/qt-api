@@ -1,5 +1,6 @@
 package ch.w3tec.qt.api.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -40,7 +41,7 @@ public class Tournament extends Auditable {
             orphanRemoval = true
     )
     @ToString.Exclude
-    @Getter(AccessLevel.PROTECTED)
+    @JsonIgnore
     private Set<Team> teams;
 
     @OneToMany(

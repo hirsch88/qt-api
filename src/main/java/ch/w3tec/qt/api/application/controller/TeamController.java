@@ -2,6 +2,7 @@ package ch.w3tec.qt.api.application.controller;
 
 import ch.w3tec.qt.api.application.request.UpdateTeamRequest;
 import ch.w3tec.qt.api.domain.service.TeamService;
+import ch.w3tec.qt.api.domain.service.TournamentService;
 import ch.w3tec.qt.api.persistence.entity.Team;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,9 @@ public class TeamController {
     private final TeamService teamService;
 
     @Autowired
-    public TeamController(TeamService teamService) {
+    public TeamController(
+            TeamService teamService
+    ) {
         this.teamService = teamService;
     }
 
@@ -24,12 +27,6 @@ public class TeamController {
     public ResponseEntity<Team> findById(@PathVariable("id") UUID id) {
         Team team = teamService.findById(id);
         return ResponseEntity.ok().body(team);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteById(@PathVariable("id") UUID id) {
-        teamService.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
