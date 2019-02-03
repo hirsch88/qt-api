@@ -12,6 +12,8 @@ import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import ch.w3tec.qt.api.persistence.repository.GameRepository;
 import ch.w3tec.qt.api.persistence.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,9 +43,9 @@ public class GameService {
                 .orElseThrow(() -> new ResourceNotFoundException("Game", "id", id.toString()));
     }
 
-    public List<Game> findGamesByTournamentId(UUID id) {
+    public Page<Game> findGamesByTournamentId(UUID id, Pageable pageRequest) {
         Tournament tournament = tournamentService.findById(id);
-        return gameRepository.findByTournament(tournament);
+        return gameRepository.findByTournament(tournament, pageRequest);
     }
 
     public Game update(UUID id, UpdateGameRequest updateGameRequest) {

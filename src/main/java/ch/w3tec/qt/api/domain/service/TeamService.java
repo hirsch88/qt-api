@@ -10,6 +10,8 @@ import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import ch.w3tec.qt.api.persistence.repository.GameRepository;
 import ch.w3tec.qt.api.persistence.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,9 +52,9 @@ public class TeamService {
         teamRepository.delete(team);
     }
 
-    public List<Team> findTeamsByTournamentId(UUID id) {
+    public Page<Team> findTeamsByTournamentId(UUID id, Pageable pageRequest) {
         Tournament tournament = tournamentService.findById(id);
-        return teamRepository.findByTournament(tournament);
+        return teamRepository.findByTournament(tournament, pageRequest);
     }
 
     public Team addTeamToTournament(UUID id, CreateTeamRequest createTeamRequest) {

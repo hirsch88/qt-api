@@ -1,22 +1,17 @@
 package ch.w3tec.qt.api.domain.service;
 
-import ch.w3tec.qt.api.application.request.CreateTeamRequest;
 import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
 import ch.w3tec.qt.api.application.request.UpdateTournamentRequest;
-import ch.w3tec.qt.api.domain.exception.IllegalTeamCreationException;
-import ch.w3tec.qt.api.domain.exception.IllegalTournamentUpdateException;
 import ch.w3tec.qt.api.domain.exception.ResourceNotFoundException;
-import ch.w3tec.qt.api.persistence.entity.Game;
-import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import ch.w3tec.qt.api.persistence.repository.TournamentRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,8 +30,8 @@ public class TournamentService {
         this.tournamentRepository = tournamentRepository;
     }
 
-    public List<Tournament> findAll() {
-        return tournamentRepository.findAll();
+    public Page<Tournament> findAll(Pageable pageRequest) {
+        return tournamentRepository.findAll(pageRequest);
     }
 
     public Tournament findById(UUID id) {

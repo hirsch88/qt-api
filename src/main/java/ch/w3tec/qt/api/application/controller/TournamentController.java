@@ -2,6 +2,7 @@ package ch.w3tec.qt.api.application.controller;
 
 import ch.w3tec.qt.api.application.request.CreateTeamRequest;
 import ch.w3tec.qt.api.application.request.UpdateTournamentRequest;
+import ch.w3tec.qt.api.application.response.PageResponse;
 import ch.w3tec.qt.api.domain.service.GameService;
 import ch.w3tec.qt.api.domain.service.TeamService;
 import ch.w3tec.qt.api.domain.service.TournamentService;
@@ -10,6 +11,8 @@ import ch.w3tec.qt.api.persistence.entity.Game;
 import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +39,10 @@ public class TournamentController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Tournament>> findAll() {
-        List<Tournament> tournaments = tournamentService.findAll();
-        return ResponseEntity.ok().body(tournaments);
+    public ResponseEntity<PageResponse<Tournament>> findAll(Pageable pageRequest) {
+        Page<Tournament> page = tournamentService.findAll(pageRequest);
+        PageResponse<Tournament> pageResponse = PageResponse.build(page);
+        return ResponseEntity.ok().body(pageResponse);
     }
 
     @PostMapping()
@@ -66,15 +70,17 @@ public class TournamentController {
     }
 
     @GetMapping("/{id}/games")
-    public ResponseEntity<List<Game>> findGamesByTournamentId(@PathVariable("id") UUID id) {
-        List<Game> games = gameService.findGamesByTournamentId(id);
-        return ResponseEntity.ok().body(games);
+    public ResponseEntity<PageResponse<Game>> findGamesByTournamentId(@PathVariable("id") UUID id, Pageable pageRequest) {
+        Page<Game> page = gameService.findGamesByTournamentId(id, pageRequest);
+        PageResponse<Game> pageResponse = PageResponse.build(page);
+        return ResponseEntity.ok().body(pageResponse);
     }
 
     @GetMapping("/{id}/teams")
-    public ResponseEntity<List<Team>> findTeamsByTournamentId(@PathVariable("id") UUID id) {
-        List<Team> teams = teamService.findTeamsByTournamentId(id);
-        return ResponseEntity.ok().body(teams);
+    public ResponseEntity<PageResponse<Team>> findTeamsByTournamentId(@PathVariable("id") UUID id, Pageable pageRequest) {
+        Page<Team> page = teamService.findTeamsByTournamentId(id, pageRequest);
+        PageResponse<Team> pageResponse = PageResponse.build(page);
+        return ResponseEntity.ok().body(pageResponse);
     }
 
     @PostMapping("/{id}/teams")
