@@ -50,9 +50,9 @@ public class TournamentController {
 
         if (Strings.isNotEmpty(search)) {
             try {
-            Node rootNode = new RSQLParser().parse(search);
-            spec = rootNode.accept(new CustomRsqlVisitor<>());
-            } catch (RSQLParserException e){
+                Node rootNode = new RSQLParser().parse(search);
+                spec = rootNode.accept(new CustomRsqlVisitor<>());
+            } catch (RSQLParserException e) {
                 throw new IllegalSearchFilterException();
             }
         }

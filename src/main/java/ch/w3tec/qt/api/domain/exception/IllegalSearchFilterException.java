@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class IllegalSearchFilterException extends RuntimeException {
 
-    private String bubu = "askdjf";
-
     public IllegalSearchFilterException() {
-        super(String.format("Lexical error in your search filter"));
+        super("Lexical error in your search filter");
     }
 
 }
