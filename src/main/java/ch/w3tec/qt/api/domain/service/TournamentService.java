@@ -4,7 +4,7 @@ import ch.w3tec.qt.api.application.request.CreateTeamRequest;
 import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
 import ch.w3tec.qt.api.application.request.UpdateTournamentRequest;
 import ch.w3tec.qt.api.domain.exception.IllegalTeamCreationException;
-import ch.w3tec.qt.api.domain.exception.IllegalTeamNameException;
+import ch.w3tec.qt.api.domain.exception.IllegalTeamDeletionException;
 import ch.w3tec.qt.api.domain.exception.IllegalTournamentUpdateException;
 import ch.w3tec.qt.api.domain.exception.ResourceNotFoundException;
 import ch.w3tec.qt.api.persistence.entity.Game;
@@ -14,11 +14,10 @@ import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import ch.w3tec.qt.api.persistence.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
@@ -85,7 +84,7 @@ public class TournamentService {
     public void removeTeamFromTournament(UUID id, UUID teamId) {
         Tournament tournament = findById(id);
         if (!tournament.getState().equals(TournamentState.OPEN)) {
-            throw new IllegalTeamCreationException();
+            throw new IllegalTeamDeletionException();
         }
 
         teamService.removeTeamFromTournament(teamId);
@@ -104,9 +103,9 @@ public class TournamentService {
         switch (fromState) {
             case OPEN:
                 return updateOpenTournament(tournament, updateTournamentRequest);
-            case READY_TO_PLAN:
-                return updatePlanableTournament(tournament, updateTournamentRequest);
-            case READY_TO_PLAY:
+            case PROJECTABLE:
+                return updateProjectableTournament(tournament, updateTournamentRequest);
+            case PLAYABLE:
                 return updatePlayableTournament(tournament, updateTournamentRequest);
             default:
                 throw new IllegalTournamentUpdateException(fromState, toState);
@@ -118,22 +117,22 @@ public class TournamentService {
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
 
-        if (!(toState.equals(TournamentState.READY_TO_PLAN) || toState.equals(fromState))) {
+        if (!(toState.equals(TournamentState.PROJECTABLE) || toState.equals(fromState))) {
             throw new IllegalTournamentUpdateException(fromState, toState);
         }
 
-        if (toState.equals(TournamentState.READY_TO_PLAN)) {
-            return updatePlanableTournamentAndGenerateGames(tournament, updateTournamentRequest);
+        if (toState.equals(TournamentState.PROJECTABLE)) {
+            return updateProjectableTournamentAndGenerateGames(tournament, updateTournamentRequest);
         }
 
         return updateBeforePlaying(tournament, updateTournamentRequest);
     }
 
-    private Tournament updatePlanableTournament(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
+    private Tournament updateProjectableTournament(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
 
-        if (!(toState.equals(TournamentState.OPEN) || toState.equals(TournamentState.READY_TO_PLAY) || toState.equals(fromState))) {
+        if (!(toState.equals(TournamentState.OPEN) || toState.equals(TournamentState.PLAYABLE) || toState.equals(fromState))) {
             throw new IllegalTournamentUpdateException(fromState, toState);
         }
 
@@ -141,21 +140,21 @@ public class TournamentService {
             return updateBeforePlaying(tournament, updateTournamentRequest);
         }
 
-        return updatePlanableTournamentAndGenerateGames(tournament, updateTournamentRequest);
+        return updateProjectableTournamentAndGenerateGames(tournament, updateTournamentRequest);
     }
 
     private Tournament updatePlayableTournament(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
 
-        if (!(toState.equals(TournamentState.DONE) || toState.equals(fromState))) {
+        if (!(toState.equals(TournamentState.CLOSED) || toState.equals(fromState))) {
             throw new IllegalTournamentUpdateException(fromState, toState);
         }
 
         return updateAfterPlaning(tournament, updateTournamentRequest);
     }
 
-    private Tournament updatePlanableTournamentAndGenerateGames(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
+    private Tournament updateProjectableTournamentAndGenerateGames(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
         Tournament newTournament = updateBeforePlaying(tournament, updateTournamentRequest);
         gamePlanGeneratorService.generate(newTournament);
         return newTournament;

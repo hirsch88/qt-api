@@ -62,7 +62,7 @@ public class DatabaseSeeder {
         LOG.info("STARTING seedOpenTournamentWith3Teams");
         Tournament tournament = tournamentRepository.save(Tournament.builder()
                 .name("Planable Tournament With 3 Teams")
-                .state(TournamentState.READY_TO_PLAN)
+                .state(TournamentState.PROJECTABLE)
                 .build());
         teamRepository.save(Team.builder()
                 .name("Valencia CF")
@@ -83,7 +83,7 @@ public class DatabaseSeeder {
         LOG.info("STARTING seedOpenTournamentWith3Teams");
         Tournament tournament = tournamentRepository.save(Tournament.builder()
                 .name("Playable Tournament With 3 Teams")
-                .state(TournamentState.READY_TO_PLAY)
+                .state(TournamentState.PLAYABLE)
                 .build());
         Team team1 = teamRepository.save(Team.builder().name("Betis Sevilla").tournament(tournament).build());
         Team team2 = teamRepository.save(Team.builder().name("Arsenal").tournament(tournament).build());

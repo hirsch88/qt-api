@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "app.seeding.enabled",
+      "type": "java.lang.Boolean"
+    }
+  ]
+}
