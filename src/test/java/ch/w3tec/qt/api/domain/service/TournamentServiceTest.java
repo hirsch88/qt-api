@@ -6,6 +6,7 @@ import ch.w3tec.qt.api.application.request.UpdateTournamentRequest;
 import ch.w3tec.qt.api.domain.exception.IllegalTeamCreationException;
 import ch.w3tec.qt.api.domain.exception.IllegalTeamDeletionException;
 import ch.w3tec.qt.api.domain.exception.IllegalTournamentUpdateException;
+import ch.w3tec.qt.api.domain.service.planing.GamePlanService;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import ch.w3tec.qt.api.persistence.repository.TournamentRepository;
@@ -33,7 +34,7 @@ public class TournamentServiceTest {
     private TournamentRepository mockTournamentRepository;
 
     @Mock
-    private GamePlanGeneratorService mockGamePlanGeneratorService;
+    private GamePlanService mockGamePlanService;
 
     @Mock
     private GameService mockGameService;

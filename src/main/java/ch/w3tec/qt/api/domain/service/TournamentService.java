@@ -7,6 +7,7 @@ import ch.w3tec.qt.api.domain.exception.IllegalTeamCreationException;
 import ch.w3tec.qt.api.domain.exception.IllegalTeamDeletionException;
 import ch.w3tec.qt.api.domain.exception.IllegalTournamentUpdateException;
 import ch.w3tec.qt.api.domain.exception.ResourceNotFoundException;
+import ch.w3tec.qt.api.domain.service.planing.GamePlanService;
 import ch.w3tec.qt.api.persistence.entity.Game;
 import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
@@ -28,19 +29,19 @@ public class TournamentService {
 //    private static final Logger LOG = LoggerFactory.getLogger(TournamentService.class);
 
     private final TournamentRepository tournamentRepository;
-    private final GamePlanGeneratorService gamePlanGeneratorService;
+    private final GamePlanService gamePlanService;
     private final GameService gameService;
     private final TeamService teamService;
 
     @Autowired
     public TournamentService(
             TournamentRepository tournamentRepository,
-            GamePlanGeneratorService gamePlanGeneratorService,
+            GamePlanService gamePlanService,
             GameService gameService,
             TeamService teamService
     ) {
         this.tournamentRepository = tournamentRepository;
-        this.gamePlanGeneratorService = gamePlanGeneratorService;
+        this.gamePlanService = gamePlanService;
         this.gameService = gameService;
         this.teamService = teamService;
     }
@@ -156,7 +157,7 @@ public class TournamentService {
 
     private Tournament updateProjectableTournamentAndGenerateGames(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
         Tournament newTournament = updateBeforePlaying(tournament, updateTournamentRequest);
-        gamePlanGeneratorService.generate(newTournament);
+        gamePlanService.generate(newTournament);
         return newTournament;
     }
 
