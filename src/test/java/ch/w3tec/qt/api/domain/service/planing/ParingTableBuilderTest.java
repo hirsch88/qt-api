@@ -7,25 +7,21 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ParingTableGeneratorTest {
+public class ParingTableBuilderTest {
 
     @Test
-    public void generate_tableForSix_returnsParingTable() {
+    public void build_tableForSix_returnsParingTable() {
         int numberOfTeams = 6;
 
-        ParingTable paringTable = ParingTableGenerator.generate(numberOfTeams);
-
-        assertThat(paringTable.getRounds().size())
-                .isEqualTo(numberOfTeams - 1);
-        assertThat(paringTable.getRounds().get(0).getFixtures().size())
-                .isEqualTo(numberOfTeams / 2);
+        ParingTable paringTable = ParingTableBuilder.getInstance()
+                .withNumberOfTeams(numberOfTeams)
+                .build();
 
         testRoundOfSixPlayers(paringTable, 0, Arrays.asList(5, 0, 1, 4, 2, 3));
         testRoundOfSixPlayers(paringTable, 1, Arrays.asList(3, 5, 4, 2, 0, 1));
         testRoundOfSixPlayers(paringTable, 2, Arrays.asList(5, 1, 2, 0, 3, 4));
         testRoundOfSixPlayers(paringTable, 3, Arrays.asList(4, 5, 0, 3, 1, 2));
         testRoundOfSixPlayers(paringTable, 4, Arrays.asList(5, 2, 3, 1, 4, 0));
-
     }
 
     private void testRoundOfSixPlayers(ParingTable paringTable, int roundIndex, List<Integer> pairs) {

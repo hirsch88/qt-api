@@ -25,7 +25,9 @@ public class GamePlanService {
     public void generate(Tournament tournament) {
         Set<Team> teams = tournament.getTeams();
 
-        ParingTable paringTable = ParingTableGenerator.generate(teams.size());
+        ParingTable paringTable = ParingTableBuilder.getInstance()
+                .withNumberOfTeams(teams.size())
+                .build();
 
         // TODO: create games out of the pairing table
 
