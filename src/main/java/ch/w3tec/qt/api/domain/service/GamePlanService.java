@@ -1,6 +1,7 @@
-package ch.w3tec.qt.api.domain.service.planing;
+package ch.w3tec.qt.api.domain.service;
 
-import ch.w3tec.qt.api.domain.service.GameService;
+import ch.w3tec.qt.api.domain.service.planing.ParingTable;
+import ch.w3tec.qt.api.domain.service.planing.ParingTableBuilder;
 import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import org.springframework.beans.factory.annotation.Autowired;

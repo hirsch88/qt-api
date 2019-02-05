@@ -7,7 +7,6 @@ import ch.w3tec.qt.api.domain.exception.IllegalTeamCreationException;
 import ch.w3tec.qt.api.domain.exception.IllegalTeamDeletionException;
 import ch.w3tec.qt.api.domain.exception.IllegalTournamentUpdateException;
 import ch.w3tec.qt.api.domain.exception.ResourceNotFoundException;
-import ch.w3tec.qt.api.domain.service.planing.GamePlanService;
 import ch.w3tec.qt.api.persistence.entity.Game;
 import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;

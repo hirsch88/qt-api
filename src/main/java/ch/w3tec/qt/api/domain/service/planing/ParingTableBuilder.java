@@ -2,11 +2,12 @@ package ch.w3tec.qt.api.domain.service.planing;
 
 import java.util.List;
 
-class ParingTableBuilder {
+public class ParingTableBuilder {
 
     private int counterHostSide;
     private int counterGuestSide;
     private int numberOfTeams;
+    private boolean hasLuckyOne = false;
 
     public static ParingTableBuilder getInstance() {
         return new ParingTableBuilder();
@@ -22,11 +23,21 @@ class ParingTableBuilder {
         fillOutGuestSide(paringTable);
         swapSideForFirstColumn(paringTable);
 
+        if (hasLuckyOne) {
+            removeLuckyOne(paringTable);
+            this.numberOfTeams--;
+            paringTable.setNumberOfTeams(this.numberOfTeams);
+        }
+
         return paringTable;
     }
 
     public ParingTableBuilder withNumberOfTeams(int numberOfTeams) {
         this.numberOfTeams = numberOfTeams;
+        if (this.numberOfTeams % 2 != 0) {
+            hasLuckyOne = true;
+            this.numberOfTeams++;
+        }
         return this;
     }
 
@@ -80,6 +91,14 @@ class ParingTableBuilder {
                     fixture.swapPairing();
                 }
             }
+        }
+    }
+
+    private void removeLuckyOne(ParingTable paringTable) {
+        for (Round round : paringTable.getRounds()) {
+            List<Fixture> fixtures = round.getFixtures();
+            fixtures.remove(0);
+            round.setFixtures(fixtures);
         }
     }
 
