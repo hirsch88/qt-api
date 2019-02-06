@@ -1,7 +1,7 @@
 package ch.w3tec.qt.api.domain.service;
 
 import ch.w3tec.qt.api.domain.service.planing.ParingTable;
-import ch.w3tec.qt.api.domain.service.planing.ParingTableBuilder;
+import ch.w3tec.qt.api.domain.service.planing.ParingTableGenerator;
 import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +26,9 @@ public class GamePlanService {
     public void generate(Tournament tournament) {
         Set<Team> teams = tournament.getTeams();
 
-        ParingTable paringTable = ParingTableBuilder.getInstance()
+        ParingTable paringTable = ParingTableGenerator.getInstance()
                 .withNumberOfTeams(teams.size())
-                .build();
+                .generate();
 
         // TODO: create games out of the pairing table
 

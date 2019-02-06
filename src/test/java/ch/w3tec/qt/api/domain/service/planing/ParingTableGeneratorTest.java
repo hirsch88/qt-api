@@ -7,15 +7,15 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ParingTableBuilderTest {
+public class ParingTableGeneratorTest {
 
     @Test
     public void build_tableForZero_returnsParingTable() {
         int numberOfTeams = 0;
 
-        ParingTable paringTable = ParingTableBuilder.getInstance()
+        ParingTable paringTable = ParingTableGenerator.getInstance()
                 .withNumberOfTeams(numberOfTeams)
-                .build();
+                .generate();
 
         assertThat(paringTable.getRounds().size()).isEqualTo(0);
     }
@@ -24,9 +24,9 @@ public class ParingTableBuilderTest {
     public void build_tableForTwo_returnsParingTable() {
         int numberOfTeams = 2;
 
-        ParingTable paringTable = ParingTableBuilder.getInstance()
+        ParingTable paringTable = ParingTableGenerator.getInstance()
                 .withNumberOfTeams(numberOfTeams)
-                .build();
+                .generate();
 
         testRound(paringTable, 0, Arrays.asList(1, 0));
     }
@@ -35,9 +35,9 @@ public class ParingTableBuilderTest {
     public void build_tableForThree_returnsParingTable() {
         int numberOfTeams = 3;
 
-        ParingTable paringTable = ParingTableBuilder.getInstance()
+        ParingTable paringTable = ParingTableGenerator.getInstance()
                 .withNumberOfTeams(numberOfTeams)
-                .build();
+                .generate();
 
         testRound(paringTable, 0, Arrays.asList(1, 2));
         testRound(paringTable, 1, Arrays.asList(0, 1));
@@ -48,9 +48,9 @@ public class ParingTableBuilderTest {
     public void build_tableForFour_returnsParingTable() {
         int numberOfTeams = 4;
 
-        ParingTable paringTable = ParingTableBuilder.getInstance()
+        ParingTable paringTable = ParingTableGenerator.getInstance()
                 .withNumberOfTeams(numberOfTeams)
-                .build();
+                .generate();
 
         testRound(paringTable, 0, Arrays.asList(3, 0, 1, 2));
         testRound(paringTable, 1, Arrays.asList(2, 3, 0, 1));
@@ -61,9 +61,9 @@ public class ParingTableBuilderTest {
     public void build_tableForFive_returnsParingTable() {
         int numberOfTeams = 5;
 
-        ParingTable paringTable = ParingTableBuilder.getInstance()
+        ParingTable paringTable = ParingTableGenerator.getInstance()
                 .withNumberOfTeams(numberOfTeams)
-                .build();
+                .generate();
 
         testRound(paringTable, 0, Arrays.asList(1, 4, 2, 3));
         testRound(paringTable, 1, Arrays.asList(4, 2, 0, 1));
@@ -76,9 +76,9 @@ public class ParingTableBuilderTest {
     public void build_tableForSix_returnsParingTable() {
         int numberOfTeams = 6;
 
-        ParingTable paringTable = ParingTableBuilder.getInstance()
+        ParingTable paringTable = ParingTableGenerator.getInstance()
                 .withNumberOfTeams(numberOfTeams)
-                .build();
+                .generate();
 
         testRound(paringTable, 0, Arrays.asList(5, 0, 1, 4, 2, 3));
         testRound(paringTable, 1, Arrays.asList(3, 5, 4, 2, 0, 1));

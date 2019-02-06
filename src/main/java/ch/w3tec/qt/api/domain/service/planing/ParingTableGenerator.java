@@ -2,18 +2,19 @@ package ch.w3tec.qt.api.domain.service.planing;
 
 import java.util.List;
 
-public class ParingTableBuilder {
+public class ParingTableGenerator implements Generator<ParingTable> {
 
     private int counterHostSide;
     private int counterGuestSide;
     private int numberOfTeams;
     private boolean hasLuckyOne = false;
 
-    public static ParingTableBuilder getInstance() {
-        return new ParingTableBuilder();
+    public static ParingTableGenerator getInstance() {
+        return new ParingTableGenerator();
     }
 
-    public ParingTable build() {
+    @Override
+    public ParingTable generate() {
         counterHostSide = 0;
         counterGuestSide = numberOfTeams - 2;
 
@@ -32,7 +33,7 @@ public class ParingTableBuilder {
         return paringTable;
     }
 
-    public ParingTableBuilder withNumberOfTeams(int numberOfTeams) {
+    public ParingTableGenerator withNumberOfTeams(int numberOfTeams) {
         this.numberOfTeams = numberOfTeams;
         if (this.numberOfTeams % 2 != 0) {
             hasLuckyOne = true;
