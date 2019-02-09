@@ -65,7 +65,7 @@ public class TournamentServiceTest {
     @Test()
     public void addTeamToTournament_openTournament_addTeamToTournament() {
         Tournament tournament = Tournament.builder().state(TournamentState.OPEN).build();
-        when(mockTournamentRepository.findById(id)).thenReturn(Optional.of(tournament));
+        when(mockTournamentRepository.findByVisitorIdOrAdminId(id, id)).thenReturn(Optional.of(tournament));
 
         CreateTeamRequest createTeamRequest = CreateTeamRequest.builder().build();
         tournamentService.addTeamToTournament(id, createTeamRequest);
@@ -92,7 +92,7 @@ public class TournamentServiceTest {
     public void removeTeamFromTournament_openTournament_removeTeamToTournament() {
         UUID teamId = UUID.randomUUID();
         Tournament tournament = Tournament.builder().state(TournamentState.OPEN).build();
-        when(mockTournamentRepository.findById(id)).thenReturn(Optional.of(tournament));
+        when(mockTournamentRepository.findByVisitorIdOrAdminId(id, id)).thenReturn(Optional.of(tournament));
 
         tournamentService.removeTeamFromTournament(id, teamId);
 
@@ -144,12 +144,12 @@ public class TournamentServiceTest {
 
     private void testUpdateTournamentWithValidStateChange(TournamentState fromState, TournamentState toState) {
         Tournament existingTournament = Tournament.builder().state(fromState).build();
-        when(mockTournamentRepository.findById(ArgumentMatchers.any()))
+        when(mockTournamentRepository.findByAdminId(ArgumentMatchers.any()))
                 .thenReturn(Optional.of(existingTournament));
 
         UpdateTournamentRequest updateTournamentRequest = buildUpdateTournamentRequest(toState);
 
-        Tournament tournament = tournamentService.update(id, updateTournamentRequest);
+        Tournament tournament = tournamentService.updateByAdminId(id, updateTournamentRequest);
 
         assertThat(tournament.getName()).isEqualTo(updateTournamentRequest.getName());
         assertThat(tournament.getState()).isEqualByComparingTo(toState);
@@ -158,13 +158,13 @@ public class TournamentServiceTest {
 
     private void testUpdateTournamentWithInvalidStateChange(TournamentState fromState, TournamentState toState) {
         Tournament existingTournament = Tournament.builder().state(fromState).build();
-        when(mockTournamentRepository.findById(ArgumentMatchers.any()))
+        when(mockTournamentRepository.findByAdminId(ArgumentMatchers.any()))
                 .thenReturn(Optional.of(existingTournament));
 
         UpdateTournamentRequest updateTournamentRequest = buildUpdateTournamentRequest(toState);
 
         try {
-            tournamentService.update(id, updateTournamentRequest);
+            tournamentService.updateByAdminId(id, updateTournamentRequest);
         } catch (Exception e) {
             assertThat(e instanceof IllegalTournamentUpdateException).isTrue();
         }
@@ -172,7 +172,7 @@ public class TournamentServiceTest {
 
     private void testAddTeamToTournamentWithTournamentState(TournamentState state) {
         Tournament tournament = Tournament.builder().state(state).build();
-        when(mockTournamentRepository.findById(id)).thenReturn(Optional.of(tournament));
+        when(mockTournamentRepository.findByVisitorIdOrAdminId(id, id)).thenReturn(Optional.of(tournament));
 
         CreateTeamRequest createTeamRequest = CreateTeamRequest.builder().build();
         tournamentService.addTeamToTournament(id, createTeamRequest);
@@ -183,7 +183,7 @@ public class TournamentServiceTest {
     private void testRemoveTeamToTournamentWithTournamentState(TournamentState state) {
         UUID teamId = UUID.randomUUID();
         Tournament tournament = Tournament.builder().state(state).build();
-        when(mockTournamentRepository.findById(id)).thenReturn(Optional.of(tournament));
+        when(mockTournamentRepository.findByVisitorIdOrAdminId(id, id)).thenReturn(Optional.of(tournament));
 
         tournamentService.removeTeamFromTournament(id, teamId);
 

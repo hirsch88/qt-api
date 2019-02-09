@@ -1,8 +1,6 @@
 package ch.w3tec.qt.api.domain.service;
 
-import ch.w3tec.qt.api.application.request.CreateTeamRequest;
-import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
-import ch.w3tec.qt.api.application.request.UpdateTournamentRequest;
+import ch.w3tec.qt.api.application.request.*;
 import ch.w3tec.qt.api.domain.exception.IllegalTeamCreationException;
 import ch.w3tec.qt.api.domain.exception.IllegalTeamDeletionException;
 import ch.w3tec.qt.api.domain.exception.IllegalTournamentUpdateException;
@@ -15,7 +13,6 @@ import ch.w3tec.qt.api.persistence.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,35 +42,33 @@ public class TournamentService {
         this.teamService = teamService;
     }
 
-    public Page<Tournament> findAll(Specification<Tournament> spec, Pageable pageRequest) {
-        return tournamentRepository.findAll(spec, pageRequest);
-    }
-
-    public Tournament findById(UUID id) {
-        return tournamentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tournament", "id", id.toString()));
-    }
-
-    public Page<Game> findGamesByTournamentId(UUID id, Pageable pageRequest) {
-        Tournament tournament = findById(id);
-        return gameService.findByTournament(tournament, pageRequest);
-    }
-
-    public Page<Team> findTeamsByTournamentId(UUID id, Pageable pageRequest) {
-        Tournament tournament = findById(id);
-        return teamService.findByTournament(tournament, pageRequest);
+    public Tournament findByVisitorIdOrAdminId(UUID visitorOrAdminId) {
+        return tournamentRepository.findByVisitorIdOrAdminId(visitorOrAdminId, visitorOrAdminId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tournament", "visitorOrAdminId", visitorOrAdminId.toString()));
     }
 
     public Tournament create(CreateTournamentRequest createTournamentRequest) {
         Tournament tournament = Tournament.builder()
                 .name(createTournamentRequest.getName())
+                .adminId(UUID.randomUUID())
+                .visitorId(UUID.randomUUID())
                 .state(TournamentState.OPEN)
                 .build();
         return tournamentRepository.save(tournament);
     }
 
-    public Team addTeamToTournament(UUID id, CreateTeamRequest createTeamRequest) {
-        Tournament tournament = findById(id);
+    public Page<Game> findGamesByVisitorIdOrAdminId(UUID visitorOrAdminId, Pageable pageRequest) {
+        Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
+        return gameService.findByTournament(tournament, pageRequest);
+    }
+
+    public Page<Team> findTeamsByVisitorIdOrAdminId(UUID visitorOrAdminId, Pageable pageRequest) {
+        Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
+        return teamService.findByTournament(tournament, pageRequest);
+    }
+
+    public Team addTeamToTournament(UUID visitorOrAdminId, CreateTeamRequest createTeamRequest) {
+        Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
         if (!tournament.getState().equals(TournamentState.OPEN)) {
             throw new IllegalTeamCreationException();
         }
@@ -81,8 +76,17 @@ public class TournamentService {
         return teamService.addTeamToTournament(tournament, createTeamRequest);
     }
 
-    public void removeTeamFromTournament(UUID id, UUID teamId) {
-        Tournament tournament = findById(id);
+    public Team updateTeamOfTournament(UUID visitorOrAdminId, UUID teamId, UpdateTeamRequest updateTeamRequest) {
+        Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
+        if (!tournament.getState().equals(TournamentState.OPEN)) {
+            throw new IllegalTeamCreationException();
+        }
+
+        return teamService.update(teamId, updateTeamRequest);
+    }
+
+    public void removeTeamFromTournament(UUID visitorOrAdminId, UUID teamId) {
+        Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
         if (!tournament.getState().equals(TournamentState.OPEN)) {
             throw new IllegalTeamDeletionException();
         }
@@ -90,13 +94,17 @@ public class TournamentService {
         teamService.removeTeamFromTournament(teamId);
     }
 
-    public void deleteById(UUID id) {
-        Tournament tournament = findById(id);
-        tournamentRepository.delete(tournament);
+    public Game updateGamesByAdminId(UUID adminId, UUID gameId, UpdateGameRequest updateGameRequest) {
+        Tournament tournament = findByAdminId(adminId);
+        if (!tournament.getState().equals(TournamentState.PLAYABLE)) {
+            throw new IllegalTeamDeletionException();
+        }
+
+        return gameService.update(gameId, updateGameRequest);
     }
 
-    public Tournament update(UUID id, UpdateTournamentRequest updateTournamentRequest) {
-        Tournament tournament = findById(id);
+    public Tournament updateByAdminId(UUID adminId, UpdateTournamentRequest updateTournamentRequest) {
+        Tournament tournament = findByAdminId(adminId);
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
 
@@ -160,16 +168,35 @@ public class TournamentService {
         return newTournament;
     }
 
-    private Tournament updateBeforePlaying(Tournament tournament, UpdateTournamentRequest updateTournamentRequest){
+    private Tournament updateBeforePlaying(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
         return tournamentRepository.save(tournament.toBuilder()
                 .name(updateTournamentRequest.getName())
                 .state(updateTournamentRequest.getState()).build());
     }
 
-    private Tournament updateAfterPlaning(Tournament tournament, UpdateTournamentRequest updateTournamentRequest){
+    private Tournament updateAfterPlaning(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
         return tournamentRepository.save(tournament.toBuilder()
                 .name(updateTournamentRequest.getName())
                 .state(updateTournamentRequest.getState()).build());
     }
+
+    private Tournament findByAdminId(UUID adminId) {
+        return tournamentRepository.findByAdminId(adminId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tournament", "adminId", adminId.toString()));
+    }
+
+//    private Tournament findById(UUID id) {
+//        return tournamentRepository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Tournament", "id", id.toString()));
+//    }
+//
+//    private Tournament findByVisitorId(UUID visitorId) {
+//        return tournamentRepository.findByVisitorId(visitorId)
+//                .orElseThrow(() -> new ResourceNotFoundException("Tournament", "visitorId", visitorId.toString()));
+//    }
+//
+//    public Page<Tournament> findAll(Specification<Tournament> spec, Pageable pageRequest) {
+//        return tournamentRepository.findAll(spec, pageRequest);
+//    }
 
 }

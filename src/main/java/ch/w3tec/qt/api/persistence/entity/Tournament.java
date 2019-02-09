@@ -6,7 +6,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,6 +25,12 @@ public class Tournament extends Auditable {
     @Column(columnDefinition = "BINARY(16)")
     @EqualsAndHashCode.Include
     private UUID id;
+
+    @Column(columnDefinition = "BINARY(16)", unique = true)
+    private UUID adminId;
+
+    @Column(columnDefinition = "BINARY(16)", unique = true)
+    private UUID visitorId;
 
     @Size(max = 40)
     @Column(nullable = false)
