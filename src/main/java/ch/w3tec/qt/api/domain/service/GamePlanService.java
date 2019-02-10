@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,7 @@ public class GamePlanService {
         LOGGER.info("STARTED generate(tournamentId={})", tournament.getId());
         Set<Team> teams = tournament.getTeams();
         List<Team> teamList = new ArrayList<>(teams);
+        Collections.shuffle(teamList);
         LOGGER.info("Creating games for {} teams", teamList.size());
 
         ParingTable paringTable = paringTableService.generate(ParingTableGenerationOptions.builder()

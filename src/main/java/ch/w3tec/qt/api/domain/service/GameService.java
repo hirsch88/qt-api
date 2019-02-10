@@ -2,6 +2,7 @@ package ch.w3tec.qt.api.domain.service;
 
 import ch.w3tec.qt.api.application.request.UpdateGameRequest;
 import ch.w3tec.qt.api.domain.exception.IllegalGameUpdateException;
+import ch.w3tec.qt.api.domain.exception.IllegalPaginationRequest;
 import ch.w3tec.qt.api.domain.exception.ResourceNotFoundException;
 import ch.w3tec.qt.api.persistence.entity.Game;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +40,12 @@ public class GameService {
     }
 
     protected Page<Game> findByTournament(Tournament tournament, Pageable pageRequest) {
-        return gameRepository.findByTournament(tournament, pageRequest);
+        try {
+            return gameRepository.findByTournament(tournament, pageRequest);
+        } catch (PropertyReferenceException exception) {
+            LOGGER.warn("FAILED findByTournament() => {}", exception.getMessage());
+            throw new IllegalPaginationRequest(pageRequest);
+        }
     }
 
     public Game create(Game game) {

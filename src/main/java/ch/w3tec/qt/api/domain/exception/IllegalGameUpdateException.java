@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class IllegalGameUpdateException extends RuntimeException {
 
     public IllegalGameUpdateException() {
-        super(String.format("It is only allowed to update games during the PLAY state"));
+        super("It is only allowed to update games during the PLAY state");
     }
 
 }
