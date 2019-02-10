@@ -7,6 +7,8 @@ import ch.w3tec.qt.api.persistence.entity.Game;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import ch.w3tec.qt.api.persistence.repository.GameRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +21,7 @@ import java.util.UUID;
 @Transactional
 public class GameService {
 
-//    private static final Logger LOG = LoggerFactory.getLogger(TournamentService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameService.class);
 
     private final GameRepository gameRepository;
 
@@ -39,15 +41,32 @@ public class GameService {
         return gameRepository.findByTournament(tournament, pageRequest);
     }
 
+    public Game create(Game game) {
+        LOGGER.info("STARTED update(game={})", game);
+        Game savedGame = gameRepository.save(game);
+        LOGGER.info("FINISHED update(game={}) => {}", game, savedGame);
+        return savedGame;
+    }
+
     public Game update(UUID id, UpdateGameRequest updateGameRequest) {
+        LOGGER.info("STARTED update(gameId={}, updateGameRequest={})", id, updateGameRequest);
         Game game = findById(id);
         if (!game.getTournament().getState().equals(TournamentState.PLAYABLE)) {
+            LOGGER.warn("FAILED update(gameId={}) => IllegalGameUpdateException");
             throw new IllegalGameUpdateException();
         }
 
-        return gameRepository.save(game.toBuilder()
+        Game savedGame = gameRepository.save(game.toBuilder()
                 .hostScore(updateGameRequest.getHostScore())
                 .guestScore(updateGameRequest.getGuestScore())
                 .build());
+        LOGGER.info("FINISHED update(gameId={}) => ", savedGame.getId(), savedGame);
+        return savedGame;
+    }
+
+    public void deleteByTournament(Tournament tournament) {
+        LOGGER.info("STARTED deleteByTournament(tournament={})", tournament);
+        gameRepository.deleteByTournament(tournament);
+        LOGGER.info("FINISHED deleteByTournament(tournament={})", tournament);
     }
 }

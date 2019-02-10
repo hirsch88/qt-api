@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @Builder(toBuilder = true)
 public class UpdateTournamentRequest {
 
+    @NotNull
     private String name;
 
     @NotNull

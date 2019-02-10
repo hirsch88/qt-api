@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-class Fixture {
+public class Fixture {
 
     private Integer host;
     private Integer guest;

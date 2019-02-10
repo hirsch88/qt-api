@@ -10,6 +10,8 @@ import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import ch.w3tec.qt.api.persistence.entity.TournamentState;
 import ch.w3tec.qt.api.persistence.repository.TournamentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +24,7 @@ import java.util.UUID;
 @Transactional
 public class TournamentService {
 
-//    private static final Logger LOG = LoggerFactory.getLogger(TournamentService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TournamentService.class);
 
     private final TournamentRepository tournamentRepository;
     private final GamePlanService gamePlanService;
@@ -48,13 +50,17 @@ public class TournamentService {
     }
 
     public Tournament create(CreateTournamentRequest createTournamentRequest) {
+        LOGGER.info("STARTED create(createTournamentRequest={})", createTournamentRequest);
         Tournament tournament = Tournament.builder()
                 .name(createTournamentRequest.getName())
                 .adminId(UUID.randomUUID())
                 .visitorId(UUID.randomUUID())
                 .state(TournamentState.OPEN)
                 .build();
-        return tournamentRepository.save(tournament);
+
+        Tournament savedTournament = tournamentRepository.save(tournament);
+        LOGGER.info("FINISHED create(createTournamentRequest={}) => {}", createTournamentRequest, savedTournament);
+        return savedTournament;
     }
 
     public Page<Game> findGamesByVisitorIdOrAdminId(UUID visitorOrAdminId, Pageable pageRequest) {
@@ -68,102 +74,143 @@ public class TournamentService {
     }
 
     public Team addTeamToTournament(UUID visitorOrAdminId, CreateTeamRequest createTeamRequest) {
+        LOGGER.info("STARTED addTeamToTournament(visitorOrAdminId={}, createTeamRequest={})", visitorOrAdminId, createTeamRequest);
+
         Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
         if (!tournament.getState().equals(TournamentState.OPEN)) {
+            LOGGER.warn("FAILED addTeamToTournament(visitorOrAdminId={}, createTeamRequest={}) => IllegalTeamCreationException", visitorOrAdminId, createTeamRequest);
             throw new IllegalTeamCreationException();
         }
 
-        return teamService.addTeamToTournament(tournament, createTeamRequest);
+        Team savedTeam = teamService.addTeamToTournament(tournament, createTeamRequest);
+        LOGGER.info("FINISHED addTeamToTournament(visitorOrAdminId={}, createTeamRequest={}) => {}", visitorOrAdminId, createTeamRequest, savedTeam);
+        return savedTeam;
     }
 
     public Team updateTeamOfTournament(UUID visitorOrAdminId, UUID teamId, UpdateTeamRequest updateTeamRequest) {
+        LOGGER.info("STARTED updateTeamOfTournament(visitorOrAdminId={}, teamId={}, updateTeamRequest={})", visitorOrAdminId, teamId, updateTeamRequest);
         Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
         if (!tournament.getState().equals(TournamentState.OPEN)) {
+            LOGGER.warn("FAILED updateTeamOfTournament(visitorOrAdminId={}, teamId={}, updateTeamRequest={}) => IllegalTeamCreationException", visitorOrAdminId, teamId, updateTeamRequest);
             throw new IllegalTeamCreationException();
         }
 
-        return teamService.update(teamId, updateTeamRequest);
+        Team savedTeam = teamService.update(teamId, updateTeamRequest);
+        LOGGER.info("FINISHED updateTeamOfTournament(visitorOrAdminId={}, teamId={}, updateTeamRequest={}) => {}", visitorOrAdminId, teamId, updateTeamRequest, savedTeam);
+        return savedTeam;
     }
 
     public void removeTeamFromTournament(UUID visitorOrAdminId, UUID teamId) {
+        LOGGER.info("STARTED removeTeamFromTournament(visitorOrAdminId={}, teamId={})", visitorOrAdminId, teamId);
         Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
         if (!tournament.getState().equals(TournamentState.OPEN)) {
+            LOGGER.warn("FAILED removeTeamFromTournament(visitorOrAdminId={}, teamId={}) => IllegalTeamDeletionException", visitorOrAdminId, teamId);
             throw new IllegalTeamDeletionException();
         }
 
         teamService.removeTeamFromTournament(teamId);
+        LOGGER.info("FINISHED removeTeamFromTournament(visitorOrAdminId={}, teamId={})", visitorOrAdminId, teamId);
     }
 
     public Game updateGamesByAdminId(UUID adminId, UUID gameId, UpdateGameRequest updateGameRequest) {
+        LOGGER.info("STARTED updateGamesByAdminId(adminId={}, gameId={}, updateGameRequest={})", adminId, gameId, updateGameRequest);
+
         Tournament tournament = findByAdminId(adminId);
         if (!tournament.getState().equals(TournamentState.PLAYABLE)) {
+            LOGGER.warn("FAILED updateGamesByAdminId(adminId={}, gameId={}, updateGameRequest={}) => IllegalTeamDeletionException", adminId, gameId, updateGameRequest);
             throw new IllegalTeamDeletionException();
         }
 
-        return gameService.update(gameId, updateGameRequest);
+        Game savedGame = gameService.update(gameId, updateGameRequest);
+        LOGGER.info("FINISHED updateGamesByAdminId(adminId={}, gameId={}, updateGameRequest={}) => {}", adminId, gameId, updateGameRequest, savedGame);
+        return savedGame;
     }
 
     public Tournament updateByAdminId(UUID adminId, UpdateTournamentRequest updateTournamentRequest) {
+        LOGGER.info("STARTED updateByAdminId(adminId={}, updateTournamentRequest={})", adminId, updateTournamentRequest);
         Tournament tournament = findByAdminId(adminId);
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
+        LOGGER.info("Update tournament from state {} to the state {}", fromState, toState);
 
         switch (fromState) {
             case OPEN:
-                return updateOpenTournament(tournament, updateTournamentRequest);
+                Tournament savedOpenTournament = updateOpenTournament(tournament, updateTournamentRequest);
+                LOGGER.info("FINISHED updateByAdminId(adminId={}, updateTournamentRequest={})", adminId, updateTournamentRequest, savedOpenTournament);
+                return savedOpenTournament;
             case PROJECTABLE:
-                return updateProjectableTournament(tournament, updateTournamentRequest);
+                Tournament savedProjectableTournament = updateProjectableTournament(tournament, updateTournamentRequest);
+                LOGGER.info("FINISHED updateByAdminId(adminId={}, updateTournamentRequest={})", adminId, updateTournamentRequest, savedProjectableTournament);
+                return savedProjectableTournament;
             case PLAYABLE:
-                return updatePlayableTournament(tournament, updateTournamentRequest);
+                Tournament savedPlayableTournament = updatePlayableTournament(tournament, updateTournamentRequest);
+                LOGGER.info("FINISHED updateByAdminId(adminId={}, updateTournamentRequest={})", adminId, updateTournamentRequest, savedPlayableTournament);
+                return savedPlayableTournament;
             default:
                 throw new IllegalTournamentUpdateException(fromState, toState);
         }
-
     }
 
     private Tournament updateOpenTournament(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
+        LOGGER.info("STARTED updateOpenTournament(tournament={}, updateTournamentRequest={})", tournament, updateTournamentRequest);
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
 
         if (!(toState.equals(TournamentState.PROJECTABLE) || toState.equals(fromState))) {
+            LOGGER.info("FAILED updateOpenTournament(tournament={}, updateTournamentRequest={}) => IllegalTournamentUpdateException", tournament, updateTournamentRequest);
             throw new IllegalTournamentUpdateException(fromState, toState);
         }
 
         if (toState.equals(TournamentState.PROJECTABLE)) {
-            return updateProjectableTournamentAndGenerateGames(tournament, updateTournamentRequest);
+            Tournament savedProjectableTournament = updateProjectableTournamentAndGenerateGames(tournament, updateTournamentRequest);
+            LOGGER.info("FINISHED updateOpenTournament(tournament={}, updateTournamentRequest={}) => {}", tournament, updateTournamentRequest, savedProjectableTournament);
+            return savedProjectableTournament;
         }
 
-        return updateBeforePlaying(tournament, updateTournamentRequest);
+        Tournament savedOpenTournament = updateBeforePlaying(tournament, updateTournamentRequest);
+        LOGGER.info("FINISHED updateOpenTournament(tournament={}, updateTournamentRequest={}) => {}", tournament, updateTournamentRequest, savedOpenTournament);
+        return savedOpenTournament;
     }
 
     private Tournament updateProjectableTournament(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
+        LOGGER.info("STARTED updateProjectableTournament(tournament={}, updateTournamentRequest={})", tournament, updateTournamentRequest);
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
 
         if (!(toState.equals(TournamentState.OPEN) || toState.equals(TournamentState.PLAYABLE) || toState.equals(fromState))) {
+            LOGGER.warn("FAILED updateProjectableTournament(tournament={}, updateTournamentRequest={}) => IllegalTournamentUpdateException", tournament, updateTournamentRequest);
             throw new IllegalTournamentUpdateException(fromState, toState);
         }
 
         if (toState.equals(TournamentState.OPEN)) {
-            return updateBeforePlaying(tournament, updateTournamentRequest);
+            Tournament savedOpenTournament = updateBeforePlaying(tournament, updateTournamentRequest);
+            LOGGER.warn("FINISHED updateProjectableTournament(tournament={}, updateTournamentRequest={}) => {}", tournament, updateTournamentRequest, savedOpenTournament);
+            return savedOpenTournament;
         }
 
-        return updateProjectableTournamentAndGenerateGames(tournament, updateTournamentRequest);
+        Tournament savedProjectableTournament = updateProjectableTournamentAndGenerateGames(tournament, updateTournamentRequest);
+        LOGGER.warn("FINISHED updateProjectableTournament(tournament={}, updateTournamentRequest={}) => {}", tournament, updateTournamentRequest, savedProjectableTournament);
+        return savedProjectableTournament;
     }
 
     private Tournament updatePlayableTournament(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
+        LOGGER.info("STARTED updatePlayableTournament(tournament={}, updateTournamentRequest={})", tournament, updateTournamentRequest);
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
 
         if (!(toState.equals(TournamentState.CLOSED) || toState.equals(fromState))) {
+            LOGGER.info("FAILED updatePlayableTournament(tournament={}, updateTournamentRequest={}) => IllegalTournamentUpdateException", tournament, updateTournamentRequest);
             throw new IllegalTournamentUpdateException(fromState, toState);
         }
 
-        return updateAfterPlaning(tournament, updateTournamentRequest);
+        Tournament savedTournament = updateAfterPlaning(tournament, updateTournamentRequest);
+        LOGGER.info("FINISHED updatePlayableTournament(tournament={}, updateTournamentRequest={}) => {}", tournament, updateTournamentRequest, savedTournament);
+        return savedTournament;
     }
 
     private Tournament updateProjectableTournamentAndGenerateGames(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
         Tournament newTournament = updateBeforePlaying(tournament, updateTournamentRequest);
+        gameService.deleteByTournament(tournament);
         gamePlanService.generate(newTournament);
         return newTournament;
     }
@@ -180,21 +227,16 @@ public class TournamentService {
                 .state(updateTournamentRequest.getState()).build());
     }
 
-    private Tournament findByAdminId(UUID adminId) {
+    public Tournament findByAdminId(UUID adminId) {
         return tournamentRepository.findByAdminId(adminId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tournament", "adminId", adminId.toString()));
     }
 
-//    private Tournament findById(UUID id) {
-//        return tournamentRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Tournament", "id", id.toString()));
-//    }
-//
-//    private Tournament findByVisitorId(UUID visitorId) {
-//        return tournamentRepository.findByVisitorId(visitorId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Tournament", "visitorId", visitorId.toString()));
-//    }
-//
+    public Tournament findByVisitorId(UUID visitorId) {
+        return tournamentRepository.findByVisitorId(visitorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tournament", "visitorId", visitorId.toString()));
+    }
+
 //    public Page<Tournament> findAll(Specification<Tournament> spec, Pageable pageRequest) {
 //        return tournamentRepository.findAll(spec, pageRequest);
 //    }

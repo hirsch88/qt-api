@@ -14,4 +14,5 @@ public interface GameRepository extends JpaRepository<Game, UUID> {
 
     Page<Game> findByTournament(Tournament tournament, Pageable pageable);
 
+    void deleteByTournament(Tournament tournament);
 }

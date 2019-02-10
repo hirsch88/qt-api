@@ -13,5 +13,8 @@ public interface TournamentRepository extends JpaRepository<Tournament, UUID> {
 
     Optional<Tournament> findByAdminId(UUID adminId);
 
+    Optional<Tournament> findByVisitorId(UUID visitorId);
+
     Optional<Tournament> findByVisitorIdOrAdminId(UUID visitorId, UUID adminId);
+
 }

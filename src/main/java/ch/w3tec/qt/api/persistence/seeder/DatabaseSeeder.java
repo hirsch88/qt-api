@@ -15,6 +15,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class DatabaseSeeder {
 
@@ -53,6 +55,8 @@ public class DatabaseSeeder {
         LOG.info("STARTING seedOpenTournament");
         tournamentRepository.save(Tournament.builder()
                 .name("Open Tournament")
+                .visitorId(UUID.randomUUID())
+                .adminId(UUID.randomUUID())
                 .state(TournamentState.OPEN)
                 .build());
         LOG.info("FINISHED seedOpenTournament");
@@ -62,6 +66,8 @@ public class DatabaseSeeder {
         LOG.info("STARTING seedOpenTournamentWith3Teams");
         Tournament tournament = tournamentRepository.save(Tournament.builder()
                 .name("Planable Tournament With 3 Teams")
+                .visitorId(UUID.randomUUID())
+                .adminId(UUID.randomUUID())
                 .state(TournamentState.PROJECTABLE)
                 .build());
         teamRepository.save(Team.builder()
@@ -83,6 +89,8 @@ public class DatabaseSeeder {
         LOG.info("STARTING seedOpenTournamentWith3Teams");
         Tournament tournament = tournamentRepository.save(Tournament.builder()
                 .name("Playable Tournament With 3 Teams")
+                .visitorId(UUID.randomUUID())
+                .adminId(UUID.randomUUID())
                 .state(TournamentState.PLAYABLE)
                 .build());
         Team team1 = teamRepository.save(Team.builder().name("Betis Sevilla").tournament(tournament).build());

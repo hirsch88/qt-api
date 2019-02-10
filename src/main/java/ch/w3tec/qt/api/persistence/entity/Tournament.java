@@ -26,9 +26,13 @@ public class Tournament extends Auditable {
     @EqualsAndHashCode.Include
     private UUID id;
 
+    @ToString.Exclude
+    @JsonIgnore
     @Column(columnDefinition = "BINARY(16)", unique = true)
     private UUID adminId;
 
+    @ToString.Exclude
+    @JsonIgnore
     @Column(columnDefinition = "BINARY(16)", unique = true)
     private UUID visitorId;
 

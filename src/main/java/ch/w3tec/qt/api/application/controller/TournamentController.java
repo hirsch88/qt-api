@@ -2,6 +2,7 @@ package ch.w3tec.qt.api.application.controller;
 
 import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
 import ch.w3tec.qt.api.application.request.UpdateTournamentRequest;
+import ch.w3tec.qt.api.application.response.AdminTournamentResponse;
 import ch.w3tec.qt.api.domain.service.TournamentService;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,21 @@ public class TournamentController {
     }
 
     @PostMapping()
-    public ResponseEntity<Tournament> create(@RequestBody @Valid CreateTournamentRequest createTournamentRequest) {
+    public ResponseEntity<AdminTournamentResponse> create(@RequestBody @Valid CreateTournamentRequest createTournamentRequest) {
         Tournament tournament = tournamentService.create(createTournamentRequest);
+        return ResponseEntity.ok().body(new AdminTournamentResponse(tournament));
+    }
+
+    @GetMapping("/{visitorId}")
+    public ResponseEntity<Tournament> findByVisitorId(@PathVariable("visitorId") UUID visitorId) {
+        Tournament tournament = tournamentService.findByVisitorId(visitorId);
         return ResponseEntity.ok().body(tournament);
     }
 
-    @GetMapping("/{visitorOrAdminId}")
-    public ResponseEntity<Tournament> findByVisitorId(@PathVariable("visitorOrAdminId") UUID visitorOrAdminId) {
-        Tournament tournament = tournamentService.findByVisitorIdOrAdminId(visitorOrAdminId);
-        return ResponseEntity.ok().body(tournament);
+    @GetMapping("/{adminId}/admin")
+    public ResponseEntity<AdminTournamentResponse> findByAdminId(@PathVariable("adminId") UUID adminId) {
+        Tournament tournament = tournamentService.findByAdminId(adminId);
+        return ResponseEntity.ok().body(new AdminTournamentResponse(tournament));
     }
 
     @PutMapping("/{adminId}/admin")

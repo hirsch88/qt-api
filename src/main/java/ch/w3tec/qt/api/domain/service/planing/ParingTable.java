@@ -17,7 +17,7 @@ public class ParingTable {
     private int numberOfFields;
     private List<Round> rounds;
 
-    ParingTable(int numberOfTeams) {
+    public ParingTable(int numberOfTeams) {
         this.numberOfTeams = numberOfTeams;
         this.numberOfRounds = numberOfTeams - 1;
         this.numberOfFields = numberOfTeams / 2;

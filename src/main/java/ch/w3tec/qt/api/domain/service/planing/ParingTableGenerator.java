@@ -13,6 +13,15 @@ public class ParingTableGenerator implements Generator<ParingTable> {
         return new ParingTableGenerator();
     }
 
+    public ParingTableGenerator withNumberOfTeams(int numberOfTeams) {
+        this.numberOfTeams = numberOfTeams;
+        if (this.numberOfTeams % 2 != 0) {
+            hasLuckyOne = true;
+            this.numberOfTeams++;
+        }
+        return this;
+    }
+
     @Override
     public ParingTable generate() {
         counterHostSide = 0;
@@ -31,15 +40,6 @@ public class ParingTableGenerator implements Generator<ParingTable> {
         }
 
         return paringTable;
-    }
-
-    public ParingTableGenerator withNumberOfTeams(int numberOfTeams) {
-        this.numberOfTeams = numberOfTeams;
-        if (this.numberOfTeams % 2 != 0) {
-            hasLuckyOne = true;
-            this.numberOfTeams++;
-        }
-        return this;
     }
 
     private void fillOutLastTeam(ParingTable paringTable) {

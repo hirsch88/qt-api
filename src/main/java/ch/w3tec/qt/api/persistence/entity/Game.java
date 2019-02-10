@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
@@ -29,6 +28,8 @@ public class Game extends Auditable {
     @ToString.Exclude
     @JsonIgnore
     private Tournament tournament;
+
+    private Integer round;
 
     @ManyToOne()
     @ToString.Exclude

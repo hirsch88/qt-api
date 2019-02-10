@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-class Round {
+public class Round {
 
     @EqualsAndHashCode.Include
     private int index;
