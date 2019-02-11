@@ -44,7 +44,7 @@ public class TeamService {
     }
 
     protected Team addTeamToTournament(Tournament tournament, CreateTeamRequest createTeamRequest) {
-        LOGGER.info("STARTED addTeamToTournament(tournamentId={}, createTeamRequest={})", tournament.getId(), createTeamRequest);
+        LOGGER.info("STARTING addTeamToTournament(tournamentId={}, createTeamRequest={})", tournament.getId(), createTeamRequest);
 
         if (teamRepository.countByName(createTeamRequest.getName()) > 0) {
             LOGGER.warn("FAILED addTeamToTournament(tournamentId={}, createTeamRequest={}) => IllegalTeamNameException", tournament.getId(), createTeamRequest);
@@ -62,14 +62,14 @@ public class TeamService {
     }
 
     public void removeTeamFromTournament(UUID id) {
-        LOGGER.info("STARTED removeTeamFromTournament(teamId={})", id);
+        LOGGER.info("STARTING removeTeamFromTournament(teamId={})", id);
         Team team = findById(id);
         teamRepository.delete(team);
         LOGGER.info("FINISHED removeTeamFromTournament(teamId={})", id);
     }
 
     public Team update(UUID id, UpdateTeamRequest updateTeamRequest) {
-        LOGGER.info("STARTED removeTeamFromTournament(teamId={})", id);
+        LOGGER.info("STARTING removeTeamFromTournament(teamId={})", id);
 
         Team team = findById(id);
         if (!team.getTournament().getState().equals(TournamentState.OPEN)) {

@@ -43,4 +43,7 @@ public class Game extends Auditable {
 
     private Integer guestScore;
 
+    public boolean wasPlayed() {
+        return hostScore != null && guestScore != null;
+    }
 }

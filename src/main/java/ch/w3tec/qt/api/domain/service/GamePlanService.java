@@ -34,7 +34,7 @@ public class GamePlanService {
     }
 
     public List<Game> generate(Tournament tournament) {
-        LOGGER.info("STARTED generate(tournamentId={})", tournament.getId());
+        LOGGER.info("STARTING generate(tournamentId={})", tournament.getId());
         Set<Team> teams = tournament.getTeams();
         List<Team> teamList = new ArrayList<>(teams);
         Collections.shuffle(teamList);

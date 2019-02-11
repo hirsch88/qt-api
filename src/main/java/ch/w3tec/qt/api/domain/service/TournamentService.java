@@ -1,10 +1,7 @@
 package ch.w3tec.qt.api.domain.service;
 
 import ch.w3tec.qt.api.application.request.*;
-import ch.w3tec.qt.api.domain.exception.IllegalTeamCreationException;
-import ch.w3tec.qt.api.domain.exception.IllegalTeamDeletionException;
-import ch.w3tec.qt.api.domain.exception.IllegalTournamentUpdateException;
-import ch.w3tec.qt.api.domain.exception.ResourceNotFoundException;
+import ch.w3tec.qt.api.domain.exception.*;
 import ch.w3tec.qt.api.persistence.entity.Game;
 import ch.w3tec.qt.api.persistence.entity.Team;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
@@ -50,7 +47,7 @@ public class TournamentService {
     }
 
     public Tournament create(CreateTournamentRequest createTournamentRequest) {
-        LOGGER.info("STARTED create(createTournamentRequest={})", createTournamentRequest);
+        LOGGER.info("STARTING create(createTournamentRequest={})", createTournamentRequest);
         Tournament tournament = Tournament.builder()
                 .name(createTournamentRequest.getName())
                 .adminId(UUID.randomUUID())
@@ -74,7 +71,7 @@ public class TournamentService {
     }
 
     public Team addTeamToTournament(UUID visitorOrAdminId, CreateTeamRequest createTeamRequest) {
-        LOGGER.info("STARTED addTeamToTournament(visitorOrAdminId={}, createTeamRequest={})", visitorOrAdminId, createTeamRequest);
+        LOGGER.info("STARTING addTeamToTournament(visitorOrAdminId={}, createTeamRequest={})", visitorOrAdminId, createTeamRequest);
 
         Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
         if (!tournament.getState().equals(TournamentState.OPEN)) {
@@ -88,7 +85,7 @@ public class TournamentService {
     }
 
     public Team updateTeamOfTournament(UUID visitorOrAdminId, UUID teamId, UpdateTeamRequest updateTeamRequest) {
-        LOGGER.info("STARTED updateTeamOfTournament(visitorOrAdminId={}, teamId={}, updateTeamRequest={})", visitorOrAdminId, teamId, updateTeamRequest);
+        LOGGER.info("STARTING updateTeamOfTournament(visitorOrAdminId={}, teamId={}, updateTeamRequest={})", visitorOrAdminId, teamId, updateTeamRequest);
         Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
         if (!tournament.getState().equals(TournamentState.OPEN)) {
             LOGGER.warn("FAILED updateTeamOfTournament(visitorOrAdminId={}, teamId={}, updateTeamRequest={}) => IllegalTeamCreationException", visitorOrAdminId, teamId, updateTeamRequest);
@@ -101,7 +98,7 @@ public class TournamentService {
     }
 
     public void removeTeamFromTournament(UUID visitorOrAdminId, UUID teamId) {
-        LOGGER.info("STARTED removeTeamFromTournament(visitorOrAdminId={}, teamId={})", visitorOrAdminId, teamId);
+        LOGGER.info("STARTING removeTeamFromTournament(visitorOrAdminId={}, teamId={})", visitorOrAdminId, teamId);
         Tournament tournament = findByVisitorIdOrAdminId(visitorOrAdminId);
         if (!tournament.getState().equals(TournamentState.OPEN)) {
             LOGGER.warn("FAILED removeTeamFromTournament(visitorOrAdminId={}, teamId={}) => IllegalTeamDeletionException", visitorOrAdminId, teamId);
@@ -113,12 +110,12 @@ public class TournamentService {
     }
 
     public Game updateGamesByAdminId(UUID adminId, UUID gameId, UpdateGameRequest updateGameRequest) {
-        LOGGER.info("STARTED updateGamesByAdminId(adminId={}, gameId={}, updateGameRequest={})", adminId, gameId, updateGameRequest);
+        LOGGER.info("STARTING updateGamesByAdminId(adminId={}, gameId={}, updateGameRequest={})", adminId, gameId, updateGameRequest);
 
         Tournament tournament = findByAdminId(adminId);
         if (!tournament.getState().equals(TournamentState.PLAYABLE)) {
-            LOGGER.warn("FAILED updateGamesByAdminId(adminId={}, gameId={}, updateGameRequest={}) => IllegalTeamDeletionException", adminId, gameId, updateGameRequest);
-            throw new IllegalTeamDeletionException();
+            LOGGER.warn("FAILED updateGamesByAdminId(adminId={}, gameId={}, updateGameRequest={}) => IllegalGameUpdateException", adminId, gameId, updateGameRequest);
+            throw new IllegalGameUpdateException();
         }
 
         Game savedGame = gameService.update(gameId, updateGameRequest);
@@ -127,7 +124,7 @@ public class TournamentService {
     }
 
     public Tournament updateByAdminId(UUID adminId, UpdateTournamentRequest updateTournamentRequest) {
-        LOGGER.info("STARTED updateByAdminId(adminId={}, updateTournamentRequest={})", adminId, updateTournamentRequest);
+        LOGGER.info("STARTING updateByAdminId(adminId={}, updateTournamentRequest={})", adminId, updateTournamentRequest);
         Tournament tournament = findByAdminId(adminId);
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
@@ -152,7 +149,7 @@ public class TournamentService {
     }
 
     private Tournament updateOpenTournament(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
-        LOGGER.info("STARTED updateOpenTournament(tournament={}, updateTournamentRequest={})", tournament, updateTournamentRequest);
+        LOGGER.info("STARTING updateOpenTournament(tournament={}, updateTournamentRequest={})", tournament, updateTournamentRequest);
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
 
@@ -173,7 +170,7 @@ public class TournamentService {
     }
 
     private Tournament updateProjectableTournament(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
-        LOGGER.info("STARTED updateProjectableTournament(tournament={}, updateTournamentRequest={})", tournament, updateTournamentRequest);
+        LOGGER.info("STARTING updateProjectableTournament(tournament={}, updateTournamentRequest={})", tournament, updateTournamentRequest);
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
 
@@ -194,7 +191,7 @@ public class TournamentService {
     }
 
     private Tournament updatePlayableTournament(Tournament tournament, UpdateTournamentRequest updateTournamentRequest) {
-        LOGGER.info("STARTED updatePlayableTournament(tournament={}, updateTournamentRequest={})", tournament, updateTournamentRequest);
+        LOGGER.info("STARTING updatePlayableTournament(tournament={}, updateTournamentRequest={})", tournament, updateTournamentRequest);
         final TournamentState fromState = tournament.getState();
         final TournamentState toState = updateTournamentRequest.getState();
 

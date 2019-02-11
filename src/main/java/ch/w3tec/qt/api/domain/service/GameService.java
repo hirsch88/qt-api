@@ -17,6 +17,7 @@ import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -48,15 +49,19 @@ public class GameService {
         }
     }
 
+    protected List<Game> findByTournament(Tournament tournament) {
+        return gameRepository.findByTournament(tournament);
+    }
+
     public Game create(Game game) {
-        LOGGER.info("STARTED update(game={})", game);
+        LOGGER.info("STARTING update(game={})", game);
         Game savedGame = gameRepository.save(game);
         LOGGER.info("FINISHED update(game={}) => {}", game, savedGame);
         return savedGame;
     }
 
     public Game update(UUID id, UpdateGameRequest updateGameRequest) {
-        LOGGER.info("STARTED update(gameId={}, updateGameRequest={})", id, updateGameRequest);
+        LOGGER.info("STARTING update(gameId={}, updateGameRequest={})", id, updateGameRequest);
         Game game = findById(id);
         if (!game.getTournament().getState().equals(TournamentState.PLAYABLE)) {
             LOGGER.warn("FAILED update(gameId={}) => IllegalGameUpdateException");
@@ -72,7 +77,7 @@ public class GameService {
     }
 
     public void deleteByTournament(Tournament tournament) {
-        LOGGER.info("STARTED deleteByTournament(tournament={})", tournament);
+        LOGGER.info("STARTING deleteByTournament(tournament={})", tournament);
         gameRepository.deleteByTournament(tournament);
         LOGGER.info("FINISHED deleteByTournament(tournament={})", tournament);
     }
