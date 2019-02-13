@@ -1,597 +1,627 @@
 {
-  "info": {
-    "_postman_id": "d6dcadef-f81f-4328-9746-f356583b4e42",
-    "name": "QuickTournament API",
-    "description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Tournaments",
-      "item": [
-        {
-          "name": "Find all tournaments",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/tournaments?page=0&size=10&sort=name,desc&search=name==Pl*",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "tournaments"
-              ],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "0"
-                },
-                {
-                  "key": "size",
-                  "value": "10"
-                },
-                {
-                  "key": "sort",
-                  "value": "name,desc"
-                },
-                {
-                  "key": "search",
-                  "value": "name==Pl*"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Find tournament by ID",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/tournaments/:tournamentId",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "tournaments",
-                ":tournamentId"
-              ],
-              "variable": [
-                {
-                  "key": "tournamentId",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Find games of tournament",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/tournaments/:tournamentId/games",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "tournaments",
-                ":tournamentId",
-                "games"
-              ],
-              "variable": [
-                {
-                  "key": "tournamentId",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Find teams of tournament",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/tournaments/:tournamentId/teams",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "tournaments",
-                ":tournamentId",
-                "teams"
-              ],
-              "variable": [
-                {
-                  "key": "tournamentId",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create tournament",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/tournaments",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "tournaments"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Add team to tournament",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\": \"A-Team\"\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/tournaments/:tournamentId/teams",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "tournaments",
-                ":tournamentId",
-                "teams"
-              ],
-              "variable": [
-                {
-                  "key": "tournamentId",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Remove team from tournament",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/tournaments/:tournamentId/teams/:teamId",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "tournaments",
-                ":tournamentId",
-                "teams",
-                ":teamId"
-              ],
-              "variable": [
-                {
-                  "key": "tournamentId",
-                  "value": ""
-                },
-                {
-                  "key": "teamId",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Games",
-      "item": [
-        {
-          "name": "Find game by ID",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/games/gameId",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "games",
-                "gameId"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update game",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"hostScore\": 3,\n\t\"guestScore\": 1\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/games/:gameId",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "games",
-                ":gameId"
-              ],
-              "variable": [
-                {
-                  "key": "gameId",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Teams",
-      "item": [
-        {
-          "name": "Find team by ID",
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/teams/:teamId",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "teams",
-                ":teamId"
-              ],
-              "variable": [
-                {
-                  "key": "teamId",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update team",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "name": "Content-Type",
-                "type": "text",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\": \"B-Team\"\n}"
-            },
-            "url": {
-              "raw": "{{path}}/api/teams/:teamId",
-              "host": [
-                "{{path}}"
-              ],
-              "path": [
-                "api",
-                "teams",
-                ":teamId"
-              ],
-              "variable": [
-                {
-                  "key": "teamId",
-                  "value": ""
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Greetings",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "auth": {
-          "type": "bearer",
-          "bearer": [
-            {
-              "key": "token",
-              "value": "{{access_token}}",
-              "type": "string"
-            }
-          ]
-        },
-        "method": "GET",
-        "header": [
-          {
-            "key": "Content-Type",
-            "name": "Content-Type",
-            "type": "text",
-            "value": "application/json"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
-        },
-        "url": {
-          "raw": "{{path}}/api",
-          "host": [
-            "{{path}}"
-          ],
-          "path": [
-            "api"
-          ]
-        }
-      },
-      "response": []
-    }
-  ]
+	"info": {
+		"_postman_id": "d6dcadef-f81f-4328-9746-f356583b4e42",
+		"name": "QuickTournament API",
+		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tournaments",
+			"item": [
+				{
+					"name": "Teams",
+					"item": [
+						{
+							"name": "Add team to tournament",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"D-Team\"\n}"
+								},
+								"url": {
+									"raw": "{{path}}/api/tournaments/:tournamentId/teams",
+									"host": [
+										"{{path}}"
+									],
+									"path": [
+										"api",
+										"tournaments",
+										":tournamentId",
+										"teams"
+									],
+									"variable": [
+										{
+											"key": "tournamentId",
+											"value": "{{adminId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Find teams of tournament",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
+								},
+								"url": {
+									"raw": "{{path}}/api/tournaments/:tournamentId/teams",
+									"host": [
+										"{{path}}"
+									],
+									"path": [
+										"api",
+										"tournaments",
+										":tournamentId",
+										"teams"
+									],
+									"variable": [
+										{
+											"key": "tournamentId",
+											"value": "{{visitorId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update team to tournament",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"A-Team\"\n}"
+								},
+								"url": {
+									"raw": "{{path}}/api/tournaments/:tournamentId/teams/:teamId",
+									"host": [
+										"{{path}}"
+									],
+									"path": [
+										"api",
+										"tournaments",
+										":tournamentId",
+										"teams",
+										":teamId"
+									],
+									"variable": [
+										{
+											"key": "tournamentId",
+											"value": "{{visitorId}}"
+										},
+										{
+											"key": "teamId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove team from tournament",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
+								},
+								"url": {
+									"raw": "{{path}}/api/tournaments/:tournamentId/teams/:teamId",
+									"host": [
+										"{{path}}"
+									],
+									"path": [
+										"api",
+										"tournaments",
+										":tournamentId",
+										"teams",
+										":teamId"
+									],
+									"variable": [
+										{
+											"key": "tournamentId",
+											"value": "{{visitorId}}"
+										},
+										{
+											"key": "teamId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Games",
+					"item": [
+						{
+							"name": "Find games of tournament",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
+								},
+								"url": {
+									"raw": "{{path}}/api/tournaments/:tournamentId/games?sort=round,asc",
+									"host": [
+										"{{path}}"
+									],
+									"path": [
+										"api",
+										"tournaments",
+										":tournamentId",
+										"games"
+									],
+									"query": [
+										{
+											"key": "sort",
+											"value": "round,asc"
+										}
+									],
+									"variable": [
+										{
+											"key": "tournamentId",
+											"value": "{{adminId}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update games of tournament",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"hostScore\": 2,\n    \"guestScore\": 0\n}"
+								},
+								"url": {
+									"raw": "{{path}}/api/tournaments/:tournamentId/games/:gameId",
+									"host": [
+										"{{path}}"
+									],
+									"path": [
+										"api",
+										"tournaments",
+										":tournamentId",
+										"games",
+										":gameId"
+									],
+									"variable": [
+										{
+											"key": "tournamentId",
+											"value": "{{adminId}}"
+										},
+										{
+											"key": "gameId",
+											"value": "7909d155-c57f-4d22-afdc-9f87e40c11cb"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Create tournament",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3fae66fd-374d-4869-93c6-5c93b87d36db",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"visitorId\", jsonData.visitorId);",
+									"pm.environment.set(\"adminId\", jsonData.adminId);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
+						},
+						"url": {
+							"raw": "{{path}}/api/tournaments",
+							"host": [
+								"{{path}}"
+							],
+							"path": [
+								"api",
+								"tournaments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find tournament by VisitorID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
+						},
+						"url": {
+							"raw": "{{path}}/api/tournaments/:tournamentId",
+							"host": [
+								"{{path}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":tournamentId"
+							],
+							"variable": [
+								{
+									"key": "tournamentId",
+									"value": "{{visitorId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find tournament by AdminID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
+						},
+						"url": {
+							"raw": "{{path}}/api/tournaments/:tournamentId/admin",
+							"host": [
+								"{{path}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":tournamentId",
+								"admin"
+							],
+							"variable": [
+								{
+									"key": "tournamentId",
+									"value": "{{adminId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update tournament by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\",\n\t\"state\": \"PROJECTABLE\"\n}"
+						},
+						"url": {
+							"raw": "{{path}}/api/tournaments/:tournamentId/admin",
+							"host": [
+								"{{path}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":tournamentId",
+								"admin"
+							],
+							"variable": [
+								{
+									"key": "tournamentId",
+									"value": "{{adminId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find ranking of tournament",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
+						},
+						"url": {
+							"raw": "{{path}}/api/tournaments/:tournamentId/ranking",
+							"host": [
+								"{{path}}"
+							],
+							"path": [
+								"api",
+								"tournaments",
+								":tournamentId",
+								"ranking"
+							],
+							"variable": [
+								{
+									"key": "tournamentId",
+									"value": "{{visitorId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API Info",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"Golden Cervelat Cup 2\"\n}"
+				},
+				"url": {
+					"raw": "{{path}}/api",
+					"host": [
+						"{{path}}"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		}
+	]
 }
