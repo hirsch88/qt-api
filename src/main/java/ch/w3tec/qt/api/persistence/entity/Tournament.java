@@ -40,6 +40,15 @@ public class Tournament extends Auditable {
     @Column(nullable = false)
     private String name;
 
+    @ToString.Exclude
+    @JsonIgnore
+    @Column(nullable = false)
+    private String email;
+
+    @ToString.Exclude
+    @Column(nullable = false)
+    private String owner;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TournamentState state;

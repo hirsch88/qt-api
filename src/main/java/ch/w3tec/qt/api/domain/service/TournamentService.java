@@ -50,6 +50,8 @@ public class TournamentService {
         LOGGER.info("STARTING create(createTournamentRequest={})", createTournamentRequest);
         Tournament tournament = Tournament.builder()
                 .name(createTournamentRequest.getName())
+                .email(createTournamentRequest.getEmail())
+                .owner(createTournamentRequest.getOwner())
                 .adminId(UUID.randomUUID())
                 .visitorId(UUID.randomUUID())
                 .state(TournamentState.OPEN)

@@ -3,6 +3,10 @@
     {
       "name": "app.seeding.enabled",
       "type": "java.lang.Boolean"
+    },
+    {
+      "name": "app.gui.path",
+      "type": "java.lang.String"
     }
   ]
 }

@@ -3,6 +3,7 @@ package ch.w3tec.qt.api.application.controller;
 import ch.w3tec.qt.api.application.request.CreateTournamentRequest;
 import ch.w3tec.qt.api.application.request.UpdateTournamentRequest;
 import ch.w3tec.qt.api.application.response.AdminTournamentResponse;
+import ch.w3tec.qt.api.domain.service.mail.MailService;
 import ch.w3tec.qt.api.domain.service.TournamentService;
 import ch.w3tec.qt.api.persistence.entity.Tournament;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +18,21 @@ import java.util.UUID;
 public class TournamentController {
 
     private final TournamentService tournamentService;
+    private final MailService mailService;
 
     @Autowired
     public TournamentController(
-            TournamentService tournamentService
+            TournamentService tournamentService,
+            MailService mailService
     ) {
         this.tournamentService = tournamentService;
+        this.mailService = mailService;
     }
 
     @PostMapping()
     public ResponseEntity<AdminTournamentResponse> create(@RequestBody @Valid CreateTournamentRequest createTournamentRequest) {
         Tournament tournament = tournamentService.create(createTournamentRequest);
+        mailService.sendConfirmationOfTheCreatedTournament(tournament);
         return ResponseEntity.ok().body(new AdminTournamentResponse(tournament));
     }
 

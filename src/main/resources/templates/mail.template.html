@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>QuickTournament</title>
+    <style>
+        html, body, main {
+            font-family: Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+            margin: 0 !important;
+            padding: 0;
+            color: #212121;
+            background: #D1C4E9;
+        }
+
+        h2 {
+            color: #FFFFFF;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 2px;
+            border: 1px solid #BDBDBD;
+            padding: 15px;
+            margin: 15px;
+            position: relative;
+            text-decoration: none;
+            max-width: 600px;
+        }
+
+        .box {
+            padding: 15px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .button {
+            width: 140px;
+            text-align: center;
+            will-change: box-shadow;
+            box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+            -webkit-appearance: button;
+            padding: 12px 16px;
+            border-radius: 2px;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 6px 8px;
+            min-width: 88px;
+            outline: 0;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), color 1ms;
+            position: relative;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .primary-background {
+            background: #673ab7;
+            color: #FFFFFF !important;
+        }
+
+        .secondary-background {
+            background: #FF4081;
+            color: #212121 !important;
+        }
+
+        .accent-background {
+            background: #FFFFFF;
+            color: #212121 !important;
+        }
+
+        center {
+            background-color: #D1C4E9;
+            table-layout: fixed;
+            width: 100%;
+            padding-top: 45px;
+            padding-bottom: 45px;
+        }
+
+        div.container {
+            max-width: 600px;
+            margin: 15px auto;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <center>
+        <div class="container">
+            <div class="card">
+                <h1>QuickTournament</h1>
+                <p>Hi <span th:text="${owner}"></span>,</p>
+                <p>Your Tournament <a target="_blank" th:href="@{${adminLink}}"><span th:text="${name}"></span></a> is
+                    created. You ca edit it and invite your players.</p>
+
+                <div class="box primary-background">
+                    <h2><span th:text="${name}"></span></h2>
+                    <br>
+                    <a class="button accent-background" target="_blank" th:href="@{${adminLink}}">Go to Admin page</a>
+                    <br>
+                    <br>
+                    <a class="button secondary-background" target="_blank" th:href="@{${inviteLink}}">Invite players</a>
+                </div>
+            </div>
+        </div>
+    </center>
+</main>
+</body>
+</html>

@@ -55,6 +55,8 @@ public class DatabaseSeeder {
         LOG.info("STARTING seedOpenTournament");
         Tournament tournament = tournamentRepository.save(Tournament.builder()
                 .name("Open Tournament")
+                .email("unknown@gmail.com")
+                .owner("Bruce Wayne")
                 .visitorId(UUID.randomUUID())
                 .adminId(UUID.randomUUID())
                 .state(TournamentState.OPEN)
@@ -66,6 +68,8 @@ public class DatabaseSeeder {
         LOG.info("STARTING seedPlanableTournamentWith3Teams");
         Tournament tournament = tournamentRepository.save(Tournament.builder()
                 .name("Planable Tournament With 3 Teams")
+                .email("unknown@gmail.com")
+                .owner("Bruce Wayne")
                 .visitorId(UUID.randomUUID())
                 .adminId(UUID.randomUUID())
                 .state(TournamentState.PROJECTABLE)
@@ -89,6 +93,8 @@ public class DatabaseSeeder {
         LOG.info("STARTING seedPlayableTournamentWith3Teams");
         Tournament tournament = tournamentRepository.save(Tournament.builder()
                 .name("Playable Tournament With 3 Teams")
+                .email("unknown@gmail.com")
+                .owner("Bruce Wayne")
                 .visitorId(UUID.randomUUID())
                 .adminId(UUID.randomUUID())
                 .state(TournamentState.PLAYABLE)
